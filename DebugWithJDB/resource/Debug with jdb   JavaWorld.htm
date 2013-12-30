@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<!-- saved from url=(0078)http://www.javaworld.com/article/2077445/testing-debugging/debug-with-jdb.html -->
+<html class=" js flexbox no-touch" xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://ogp.me/ns/fb#" style=""><!--<![endif]--><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script src="./Debug with jdb   JavaWorld_files/cb=gapi.loaded_1" async=""></script><script src="./Debug with jdb   JavaWorld_files/cb=gapi.loaded_0" async=""></script><script id="LR1" type="text/javascript" async="" src="./Debug with jdb   JavaWorld_files/client.js"></script><style type="text/css">.ftscroller_scrolling { -webkit-user-select: none; cursor: all-scroll !important }
+.ftscroller_container { overflow: hidden; position: relative; max-height: 100%; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); -ms-touch-action: none }
+.ftscroller_hwaccelerated { -webkit-transform: translateZ(0); }
+.ftscroller_x, .ftscroller_y { position: relative; min-width: 100%; min-height: 100%; overflow: hidden }
+.ftscroller_x { display: inline-block }
+.ftscroller_scrollbar { pointer-events: none; position: absolute; width: 5px; height: 5px; border: 1px solid rgba(255, 255, 255, 0.15); -webkit-border-radius: 3px; border-radius: 6px; opacity: 0; -webkit-transition: opacity 350ms; z-index: 10 }
+.ftscroller_scrollbarx { bottom: 2px; left: 2px }
+.ftscroller_scrollbary { right: 2px; top: 2px }
+.ftscroller_scrollbarinner { height: 100%; background: rgba(0,0,0,0.5); -webkit-border-radius: 2px; border-radius: 4px / 6px }
+.ftscroller_scrolling .ftscroller_scrollbar { opacity: 1; -webkit-transition: none; -o-transition: all 0 none }
+.ftscroller_scrolling .ftscroller_container .ftscroller_scrollbar { opacity: 0 }</style>
+	
+	<!-- metas -->
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+			
+	<title>Debug with jdb | JavaWorld</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="canonical" href="./Debug with jdb   JavaWorld_files/Debug with jdb   JavaWorld.htm">
+	<meta itemprop="url" content="http://www.javaworld.com/article/2077445/testing-debugging/debug-with-jdb.html">
+	<meta name="description" content=" How do you use jdb (included in the JDK 1.2 package) effectively to debug Java programs?">
+	<meta name="news_keywords" content="Testing &amp; Debugging,testing, debugging,Debugging,bugs,JDB">
+	
+		<meta name="publicationDate" content="2000-06-23">
+		<meta name="DC.date.issued" content="2000-06-23T02:00-05:00">
+		<meta name="date" content="2000-06-23">
+	
+	
+	
+	<meta property="og:title" content="Debug with jdb | JavaWorld">
+	
+		
+		
+			<meta property="og:image" content="http://www.javaworld.com/www.idge.jvw/images/JVW_logo_300x300.png">
+			<meta itemprop="image" content="http://www.javaworld.com/www.idge.jvw/images/JVW_logo_300x300.png">
+			<meta itemprop="thumbnailURl" content="http://www.javaworld.com/www.idge.jvw/images/JVW_logo_300x300.png">
+			<link rel="image_src" href="http://www.javaworld.com/www.idge.jvw/images/JVW_logo_300x300.png">
+			<meta name="twitter:image" content="http://www.javaworld.com/www.idge.jvw/images/JVW_logo_300x300.png">
+		
+	
+	
+	<meta property="og:type" content="article">
+	<meta name="publisher" content="JavaWorld">
+	<meta name="source" content="JavaWorld">
+	<meta name="creator" content="JavaWorld">
+	
+	<meta name="author" content="Tony Sintes">
+	<meta name="contenttype" content="News">  
+		
+	<meta property="og:site_name" content="JavaWorld">
+	<meta property="fb:app_id" content="196366870381968">
+	
+	<meta property="og:url" content="http://www.javaworld.com/article/2077445/testing-debugging/debug-with-jdb.html">
+	<meta name="twitter:url" content="http://www.javaworld.com/article/2077445/testing-debugging/debug-with-jdb.html">
+	<meta name="syndication-source" content="http://www.javaworld.com/article/2077445/testing-debugging/debug-with-jdb.html">
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:site" content="javaworldcom">
+	
+	<meta property="og:description" content=" How do you use jdb (included in the JDK 1.2 package) effectively to debug Java programs?">
+	<meta name="twitter:description" content=" How do you use jdb (included in the JDK 1.2 package) effectively to debug Java programs?">
+	
+	
+	<meta name="copyright" content="Copyright (c) 2013 JavaWorld All Rights Reserved">
+	<meta name="rights" content="http://www.javaworld.com/about/privacy.html">
+	<meta name="language" content="eng">
+	<meta name="resource-type" content="document">
+	<meta name="rating" content="General">
+	
+	<meta name="robots" content="NOODP,NOYDIR">
+	
+	<!-- pagination -->
+	
+	
+	
+	<!-- css -->
+	<link rel="stylesheet" href="http://www.javaworld.com/www.idge/css/normalize.css">
+	<link rel="stylesheet" href="http://www.javaworld.com/www.idge/css/prettify.css">
+	
+		<link rel="stylesheet" href="http://www.javaworld.com/www.idge/css/sitewrapper.css">
+		
+		<link rel="stylesheet" href="http://www.javaworld.com/www.idge/css/article.css">
+		
+		<link rel="stylesheet" href="http://www.javaworld.com/www.idge/css/print.css">
+	
+	
+		<link rel="stylesheet" href="http://www.javaworld.com/www.idge.jvw/css/sitewrapper.css">
+		
+		<link rel="stylesheet" href="http://www.javaworld.com/www.idge.jvw/css/article.css">
+		
+	
+	<link rel="stylesheet" href="http://www.javaworld.com/www.idge/css/webfonts/ss-social.css">
+	<link rel="stylesheet" href="http://www.javaworld.com/www.idge/css/webfonts/ss-standard.css">
+	<!--[if lte IE 8]>  
+		<link href="/www.idge/css/webfonts/ss-ie8.css" rel="stylesheet" />
+	<![endif]--> 
+	<link href="./Debug with jdb   JavaWorld_files/css" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="http://www.javaworld.com/www.idge/css/search-style.css?v=1.0">
+
+	<!--  fav and touch icons -->
+	<link rel="shortcut icon" type="image/x-icon" href="http://www.javaworld.com/www.idge.jvw/favicon.ico">
+	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://www.javaworld.com/www.idge.jvw/touchicon_144.gif">
+	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="http://www.javaworld.com/www.idge.jvw/touchicon_114.gif">
+	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="http://www.javaworld.com/www.idge.jvw/touchicon_72.gif">
+	<link rel="apple-touch-icon-precomposed" sizes="57x57" href="http://www.javaworld.com/www.idge.jvw/touchicon_57.gif">
+	<link rel="apple-touch-icon" href="http://www.javaworld.com/www.idge.jvw/images/JVW_logo_300x300.png">
+
+	<!-- js -->
+
+
+
+<!-- BEGIN Krux Control Tag for JavaWorld -->
+<!-- END Krux Controltag -->
+<!-- START Nielsen Online SiteCensus? V6.0 -->
+<!-- COPYRIGHT 2010 Nielsen Online -->
+
+<noscript>
+	&lt;div&gt;&lt;img src="http://secure-us.imrworldwide.com/cgi-bin/m?ci=us-203426h&amp;amp;cg=0&amp;amp;cc=1&amp;amp;ts=noscript" width="1" height="1" alt="" /&gt;&lt;/div&gt;
+</noscript>
+<!-- END Nielsen Online SiteCensus? V6.0 -->
+	
+	</head>
+
+	<body id="article2077445" class="article javaworld" style="" data-twttr-rendered="true"><iframe id="twttrHubFrameSecure" allowtransparency="true" frameborder="0" scrolling="no" tabindex="0" name="twttrHubFrameSecure" src="./Debug with jdb   JavaWorld_files/hub(1).htm" style="position: absolute; top: -9999em; width: 10px; height: 10px;"></iframe><iframe id="twttrHubFrame" allowtransparency="true" frameborder="0" scrolling="no" tabindex="0" name="twttrHubFrame" src="./Debug with jdb   JavaWorld_files/hub.htm" style="position: absolute; top: -9999em; width: 10px; height: 10px;"></iframe>
+
+
+<!-- END PAGE HEADER -->
+
+		<div id="page-wrapper">
+
+			<section role="main">
+
+				<article itemscope="" itemtype="http://schema.org/NewsArticle">
+
+
+<header>
+	<h1 itemprop="headline">Debug with jdb</h1>
+</header>
+
+
+<section class="deck">
+	<h2 itemprop="description">How do you use this crazy thing?</h2>
+</section>
+
+
+
+<div class="byline vcard author ">
+	
+	<div class="byline-wrapper">
+		<p class="name">
+			
+				
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+By <span class="fn" itemprop="name">Tony Sintes</span>
+		</p>
+		
+		<p class="dateline">
+			
+				
+			
+
+
+
+
+
+
+
+
+
+
+
+<span itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+<span itemprop="name">JavaWorld</span>
+</span> <span class="divider">|</span><span itemprop="datePublished" content="2000-06-23T02:00-0700">Jun 23, 2000 2:00 AM</span>
+		</p>
+	</div>
+</div>
+
+
+	
+	
+	
+	
+
+
+				<section class="bodee">
+
+					
+						
+						
+							
+
+
+
+
+
+
+
+
+
+
+
+
+	
+		
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="apart-alt tags">
+    <ul itemprop="keywords">
+    	
+    	
+    		<li><a href="http://www.javaworld.com/tag/debugging/">Debugging</a></li>
+    	
+    		<li><a href="http://www.javaworld.com/tag/bugs/">bugs</a></li>
+    	
+    		<li><a href="http://www.javaworld.com/tag/jdb/">JDB</a></li>
+    	
+    </ul>
+	</div>
+
+
+<div id="drr-container" itemprop="articleBody">
+	
+	<p><strong>Q: </strong>How do you use jdb (included in the JDK 1.2 package) effectively to debug Java programs?</p><p>I've tried many times, but I am successful only in loading a class file to <code>jdb</code>; I can't debug it. The <code>help</code> command isn't much use.</p><div class="related-promo-wrapper" style="">
+		<div class="promo apart">
+			<div class="hed">More like this</div>
+	    	<ul>
+
+<li class="clearfix">
+	
+   	<div class="item-eyebrow">
+
+				
+					<a href="http://www.javaworld.com/news">NEWS</a>
+				
+			
+		
+		
+    	
+	
+
+	</div>
+	<div class="title"><a href="http://www.javaworld.com/article/2076065/core-java/user-interfaces-for-object-oriented-systems--part-6--the-rpn-calculator.html">User interfaces for object-oriented systems, Part 6: The RPN calculator</a></div>
+</li>
+		    	
+		    		
+						
+					
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="clearfix">
+	
+   	<div class="item-eyebrow">
+			
+				
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+		
+			
+				
+			
+			
+				
+				
+					<a href="http://www.javaworld.com/news">NEWS</a>
+				
+			
+		
+		
+    	
+	
+
+	</div>
+	<div class="title"><a href="http://www.javaworld.com/article/2076114/core-java/using-the-if-then-else-framework--part-3.html">Using the if-then-else framework, Part 3</a></div>
+</li>
+		    	
+		    		
+						
+					
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="clearfix">
+	
+   	<div class="item-eyebrow">
+			
+				
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+		
+			
+				
+			
+			
+				
+				
+					<a href="http://www.javaworld.com/news">NEWS</a>
+				
+			
+		
+		
+    	
+	
+
+	</div>
+	<div class="title"><a href="http://www.javaworld.com/article/2071862/testing-debugging/testng--the-next-generation-of-unit-testing.html">TestNG: The next generation of unit testing</a></div>
+</li>
+		    	
+		    </ul>
+		</div>
+		<div class="handle"></div>
+	</div><p><strong>A: </strong>You ask an interesting question. To be honest, I've <em>never</em> used <code>jdb</code>. I have always used the debugger provided by my IDE environment. So to answer your question I had to do a little research of my own.</p><p>It turns out that Sun considers <code>jdb</code> a proof of concept for the Java Debugger API. The Java Debugger API allows us to actually peek into the runtime and debug our code. The <code>jdb</code> is just one implementation of a debugger that uses the API. Compared to the visual debuggers with which I'm familiar (yes, I guess I'm a wimp), it's not the easiest debugger to use -- though it is similar to other command-line debuggers, such as <code>gdb</code>.</p><p>Anyhow, on to your question. Before attempting to debug your code, be sure to use the <code>-g</code> option while compiling your classes. This option tells the compiler to include debugging information in your class file.</p><p>Let's define a contrived class for testing:</p><pre class="prettyprint prettyprinted" style=""><span class="kwd">public</span><span class="pln"> </span><span class="kwd">class</span><span class="pln"> </span><span class="typ">TestMe</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="kwd">private</span><span class="pln"> </span><span class="kwd">int</span><span class="pln"> int_value</span><span class="pun">;</span><span class="pln">
+  </span><span class="kwd">private</span><span class="pln"> </span><span class="typ">String</span><span class="pln"> string_value</span><span class="pun">;</span><span class="pln">
+  
+  </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">static</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> main</span><span class="pun">(</span><span class="typ">String</span><span class="pun">[]</span><span class="pln"> args</span><span class="pun">)</span><span class="pln">
+  </span><span class="pun">{</span><span class="pln">
+    </span><span class="typ">TestMe</span><span class="pln"> testMe </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">TestMe</span><span class="pun">();</span><span class="pln">
+    testMe</span><span class="pun">.</span><span class="pln">setInt_value</span><span class="pun">(</span><span class="lit">1</span><span class="pun">);</span><span class="pln">
+    testMe</span><span class="pun">.</span><span class="pln">setString_value</span><span class="pun">(</span><span class="str">"test"</span><span class="pun">);</span><span class="pln">
+    </span><span class="kwd">int</span><span class="pln"> integer </span><span class="pun">=</span><span class="pln"> testMe</span><span class="pun">.</span><span class="pln">getInt_value</span><span class="pun">();</span><span class="pln">
+    </span><span class="typ">String</span><span class="pln"> </span><span class="kwd">string</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> testMe</span><span class="pun">.</span><span class="pln">getString_value</span><span class="pun">();</span><span class="pln">
+    </span><span class="typ">String</span><span class="pln"> toString </span><span class="pun">=</span><span class="pln"> testMe</span><span class="pun">.</span><span class="pln">toString</span><span class="pun">();</span><span class="pln">
+  </span><span class="pun">}</span><span class="pln">
+  </span><span class="kwd">public</span><span class="pln"> </span><span class="typ">TestMe</span><span class="pun">()</span><span class="pln">
+  </span><span class="pun">{</span><span class="pln">
+  </span><span class="pun">}</span><span class="pln">
+  </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">int</span><span class="pln"> getInt_value</span><span class="pun">()</span><span class="pln">
+  </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">return</span><span class="pln"> int_value</span><span class="pun">;</span><span class="pln">
+  </span><span class="pun">}</span><span class="pln">
+  </span><span class="kwd">public</span><span class="pln"> </span><span class="typ">String</span><span class="pln"> getString_value</span><span class="pun">()</span><span class="pln">
+  </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">return</span><span class="pln"> string_value</span><span class="pun">;</span><span class="pln">
+  </span><span class="pun">}</span><span class="pln">
+  </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> setInt_value</span><span class="pun">(</span><span class="kwd">int</span><span class="pln"> value</span><span class="pun">)</span><span class="pln">
+  </span><span class="pun">{</span><span class="pln">
+    int_value </span><span class="pun">=</span><span class="pln"> value</span><span class="pun">;</span><span class="pln">
+  </span><span class="pun">}</span><span class="pln">
+  </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> setString_value</span><span class="pun">(</span><span class="typ">String</span><span class="pln"> value</span><span class="pun">)</span><span class="pln">
+  </span><span class="pun">{</span><span class="pln">
+    string_value </span><span class="pun">=</span><span class="pln"> value</span><span class="pun">;</span><span class="pln">
+  </span><span class="pun">}</span><span class="pln">
+  </span><span class="kwd">public</span><span class="pln"> </span><span class="typ">String</span><span class="pln"> toString</span><span class="pun">()</span><span class="pln">
+  </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">return</span><span class="pln"> </span><span class="str">"String value: "</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> string_value </span><span class="pun">+</span><span class="pln"> </span><span class="str">" int value: "</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> int_value</span><span class="pun">;</span><span class="pln">
+  </span><span class="pun">}</span><span class="pln">
+  
+</span><span class="pun">}</span></pre><div id="drr-mod-0">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+		
+	
+		
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+ 
+
+<div class="promo apart epo-promo" data-placement-id="drr-mod-0">
+	<div class="hed">
+	
+		
+		
+			Recent Java How-To<span class="lowercase">s</span>
+		
+		
+	
+	</div>
+	<ul>
+		
+			
+			
+				
+				
+				
+				
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+		
+			
+			
+				
+					
+						
+						
+						
+						
+						
+						
+						
+						
+					
+
+
+
+
+
+
+
+
+
+
+
+
+<li>
+	
+	
+		<div class="item-eyebrow">
+			
+				
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+		
+			
+				
+			
+			
+				
+				
+					<a href="http://www.javaworld.com/opinion">OPINION</a>
+				
+			
+		
+		
+    	
+	
+
+		</div>
+		
+	<div class="title"><a href="http://www.javaworld.com/article/2081850/enterprise-java/10-things-you-dont-need-to-worry-about-in-2014.html">10 things you don't need to worry about in 2014</a></div>
+</li>
+				
+				
+			
+		
+			
+			
+				
+					
+						
+						
+						
+						
+						
+						
+						
+						
+					
+
+
+
+
+
+
+
+
+
+
+
+
+<li>
+	
+		
+	<div class="title"><a href="http://www.javaworld.com/article/2081135/core-java/object-calisthenics-change-the-way-you-code.html">Object calisthenics: Change the way you code</a></div>
+</li>
+				
+				
+			
+		
+			
+			
+				
+					
+						
+						
+						
+						
+						
+						
+						
+						
+					
+
+
+
+
+
+
+
+
+
+
+
+
+<li>
+	
+		
+	<div class="title"><a href="http://www.javaworld.com/article/2074589/core-java/initial-peek-at-java-ee-6-cookbook-for-securing-tuning-and-extending-enterprise-applicat.html">Initial Peek at Java EE 6 Cookbook for Securing, Tuning, and Extending</a></div>
+</li>
+				
+				
+			
+		
+	
+
+	
+		
+				
+				
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+		<li><div class="title"><a href="http://www.javaworld.com/newsletters/signup.html">Daily updates on enterprise Java news, tips and techniques</a></div></li>
+	</ul>
+</div>
+<div class="handle"></div>
+
+</div><p>Start the debugger:</p><pre class="prettyprint prettyprinted" style=""><span class="pun">&gt;</span><span class="pln"> jdb </span><span class="typ">TestMe</span></pre><p>You should see:</p><pre class="prettyprint prettyprinted" style=""><span class="pun">&gt;</span><span class="pln"> </span><span class="typ">Initializing</span><span class="pln"> jdb</span><span class="pun">...</span><span class="pln">
+</span><span class="pun">&gt;</span><span class="pln"> </span><span class="lit">0xaa</span><span class="pun">:</span><span class="kwd">class</span></pre><p>Let's take a look at some basic commands. In order to set breakpoints, we need to know the line numbers or the method names of the places where we would like to break. To obtain a list of methods, simply use the <code>methods</code> command:</p><pre class="prettyprint prettyprinted" style=""><span class="pun">&gt;</span><span class="pln"> methods </span><span class="typ">TestMe</span><span class="pln">
+   </span><span class="kwd">void</span><span class="pln"> main</span><span class="pun">(</span><span class="pln">java</span><span class="pun">.</span><span class="pln">lang</span><span class="pun">.</span><span class="typ">String</span><span class="pun">[])</span><span class="pln">
+   </span><span class="kwd">void</span><span class="pln"> </span><span class="pun">()</span><span class="pln">
+   </span><span class="kwd">int</span><span class="pln"> getInt_value</span><span class="pun">()</span><span class="pln">
+   java</span><span class="pun">.</span><span class="pln">lang</span><span class="pun">.</span><span class="typ">String</span><span class="pln"> getString_value</span><span class="pun">()</span><span class="pln">
+   </span><span class="kwd">void</span><span class="pln"> setInt_value</span><span class="pun">(</span><span class="kwd">int</span><span class="pun">)</span><span class="pln">
+   </span><span class="kwd">void</span><span class="pln"> setString_value</span><span class="pun">(</span><span class="pln">java</span><span class="pun">.</span><span class="pln">lang</span><span class="pun">.</span><span class="typ">String</span><span class="pun">)</span><span class="pln">
+   java</span><span class="pun">.</span><span class="pln">lang</span><span class="pun">.</span><span class="typ">String</span><span class="pln"> toString</span><span class="pun">()</span></pre><p>Setting a breakpoint is simple. Use the following syntax:</p><pre class="prettyprint prettyprinted" style=""><span class="pln">stop </span><span class="kwd">in</span><span class="pln"> </span><span class="pun">.[&lt;</span><span class="pln">argument_type</span><span class="pun">,...&gt;]</span></pre><div class="apart ad lazyload_ad_article"><code type="text/javascript"><!--IDG.GPT.IMUCounter = IDG.GPT.IMUCounter + 1;IDG.GPT.addDisplayedAd(IDG.GPT.getIMUSlotName(), "true");IDG.GPT.addLazyloadedAd(IDG.GPT.getIMUSlotName(), "true");document.write('<div id="' + IDG.GPT.getIMUSlotName() + '" class="">');googletag.cmd.push(function() { var thisSlot = googletag.defineSlot(IDG.GPT.unitName, [[320,50],[300,1050],[300,600],[300,250],[300,50]], IDG.GPT.getIMUSlotName()).addService(googletag.pubads()).setTargeting("pos", IDG.GPT.getIMUSlotName());googletag.enableServices();googletag.display(IDG.GPT.getIMUSlotName());googletag.pubads().refresh([thisSlot]);});document.write('</div>');//--></code><div class="wrapAd"><div id="imu2" class=""><div id="google_ads_iframe_/8456/IDG.Javaworld_Enterprise_6__container__" style="border: 0pt none;"><iframe id="google_ads_iframe_/8456/IDG.Javaworld_Enterprise_6" name="google_ads_iframe_/8456/IDG.Javaworld_Enterprise_6" width="300" height="250" scrolling="no" marginwidth="0" marginheight="0" frameborder="0" src="javascript:"<html><body style='background:transparent'></body></html>"" style="border: 0px; vertical-align: bottom;"></iframe></div><iframe id="google_ads_iframe_/8456/IDG.Javaworld_Enterprise_6__hidden__" name="google_ads_iframe_/8456/IDG.Javaworld_Enterprise_6__hidden__" width="0" height="0" scrolling="no" marginwidth="0" marginheight="0" frameborder="0" src="javascript:"<html><body style='background:transparent'></body></html>"" style="border: 0px; vertical-align: bottom; visibility: hidden; display: none;"></iframe></div></div></div><p>Or:</p><pre class="prettyprint prettyprinted" style=""><span class="pln">stop at </span><span class="pun">:</span></pre><p>We should start debugging at the beginning of the main method:</p><pre class="prettyprint prettyprinted" style=""><span class="pun">&gt;</span><span class="pln"> stop </span><span class="kwd">in</span><span class="pln"> </span><span class="typ">TestMe</span><span class="pun">.</span><span class="pln">main
+   </span><span class="typ">Breakpoint</span><span class="pln"> </span><span class="kwd">set</span><span class="pln"> </span><span class="kwd">in</span><span class="pln"> javaworld</span><span class="pun">.</span><span class="typ">TestMe</span><span class="pun">.</span><span class="pln">main</span></pre><p>Now that we have a breakpoint, we can begin execution. To run up to the breakpoint, simply use the <code>run</code> command:</p><pre class="prettyprint prettyprinted" style=""><span class="pun">&gt;</span><span class="pln"> run
+run javaworld</span><span class="pun">.</span><span class="typ">TestMe</span><span class="pln">
+running </span><span class="pun">...</span><span class="pln">
+main</span><span class="pun">[</span><span class="lit">1</span><span class="pun">]</span><span class="pln">
+</span><span class="typ">Breakpoint</span><span class="pln"> hit</span><span class="pun">:</span><span class="pln"> javaworld</span><span class="pun">.</span><span class="typ">TestMe</span><span class="pun">.</span><span class="pln">main </span><span class="pun">(</span><span class="typ">TestMe</span><span class="pun">:</span><span class="lit">10</span><span class="pun">)</span></pre><p>At this point, the debugger halts execution at the first line of the main method. Notice that the cursor has changed to reflect the method that we are currently in.</p><p>The <code>list</code> command will display the code at the breakpoint. An arrow indicates the spot where the debugger has halted execution.</p><div id="drr-mod-1">
+
+
+<pre class="prettyprint prettyprinted" style=""><span class="pln">main</span><span class="pun">[</span><span class="lit">1</span><span class="pun">]</span><span class="pln"> list
+</span><span class="lit">6</span><span class="pln">            </span><span class="kwd">private</span><span class="pln"> </span><span class="typ">String</span><span class="pln"> string_value</span><span class="pun">;</span><span class="pln">
+</span><span class="lit">7</span><span class="pln">
+</span><span class="lit">8</span><span class="pln">            </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">static</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> main</span><span class="pun">(</span><span class="typ">String</span><span class="pun">[]</span><span class="pln"> args</span><span class="pun">)</span><span class="pln">
+</span><span class="lit">9</span><span class="pln">            </span><span class="pun">{</span><span class="pln">
+</span><span class="lit">10</span><span class="pln">      </span><span class="pun">=&gt;</span><span class="pln">     </span><span class="typ">TestMe</span><span class="pln"> testMe </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">TestMe</span><span class="pun">();</span><span class="pln">
+</span><span class="lit">11</span><span class="pln">             testMe</span><span class="pun">.</span><span class="pln">setInt_value</span><span class="pun">(</span><span class="lit">1</span><span class="pun">);</span><span class="pln">
+</span><span class="lit">12</span><span class="pln">             testMe</span><span class="pun">.</span><span class="pln">setString_value</span><span class="pun">(</span><span class="str">"test"</span><span class="pun">);</span><span class="pln">
+</span><span class="lit">13</span><span class="pln">
+</span><span class="lit">14</span><span class="pln">             </span><span class="kwd">int</span><span class="pln"> integer </span><span class="pun">=</span><span class="pln"> testMe</span><span class="pun">.</span><span class="pln">getInt_value</span><span class="pun">();</span><span class="pln">
+main</span><span class="pun">[</span><span class="lit">1</span><span class="pun">]</span></pre><p>Next, we'll want to <code>step</code> through a few lines of code and see what's changed:</p><pre class="prettyprint prettyprinted" style=""><span class="pln">main</span><span class="pun">[</span><span class="lit">1</span><span class="pun">]</span><span class="pln"> step
+main</span><span class="pun">[</span><span class="lit">1</span><span class="pun">]</span><span class="pln">
+</span><span class="typ">Breakpoint</span><span class="pln"> hit</span><span class="pun">:</span><span class="pln"> javaworld</span><span class="pun">.</span><span class="typ">TestMe</span><span class="pun">.</span><span class="pln"> </span><span class="pun">(</span><span class="typ">TestMe</span><span class="pun">:</span><span class="lit">20</span><span class="pun">)</span><span class="pln">
+main</span><span class="pun">[</span><span class="lit">1</span><span class="pun">]</span><span class="pln"> locals
+</span><span class="typ">Method</span><span class="pln"> arguments</span><span class="pun">:</span><span class="pln">
+</span><span class="typ">Local</span><span class="pln"> variables</span><span class="pun">:</span><span class="pln">
+  </span><span class="kwd">this</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="typ">String</span><span class="pln"> value</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">null</span><span class="pln"> </span><span class="kwd">int</span><span class="pln"> value</span><span class="pun">:</span><span class="pln"> </span><span class="lit">0</span><span class="pln">
+main</span><span class="pun">[</span><span class="lit">1</span><span class="pun">]</span><span class="pln"> list
+</span><span class="lit">16</span><span class="pln">
+</span><span class="lit">17</span><span class="pln">             </span><span class="typ">String</span><span class="pln"> toString </span><span class="pun">=</span><span class="pln"> testMe</span><span class="pun">.</span><span class="pln">toString</span><span class="pun">();</span><span class="pln">
+</span><span class="lit">18</span><span class="pln">           </span><span class="pun">}</span><span class="pln">
+</span><span class="lit">19</span><span class="pln">
+</span><span class="lit">20</span><span class="pln">      </span><span class="pun">=&gt;</span><span class="pln">   </span><span class="kwd">public</span><span class="pln"> </span><span class="typ">TestMe</span><span class="pun">()</span><span class="pln">
+</span><span class="lit">21</span><span class="pln">           </span><span class="pun">{</span><span class="pln">
+</span><span class="lit">22</span><span class="pln">           </span><span class="pun">}</span><span class="pln">
+</span><span class="lit">23</span><span class="pln">
+</span><span class="lit">24</span><span class="pln">           </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">int</span><span class="pln"> getInt_value</span><span class="pun">()</span><span class="pln">
+main</span><span class="pun">[</span><span class="lit">1</span><span class="pun">]</span><span class="pln"> step
+main</span><span class="pun">[</span><span class="lit">1</span><span class="pun">]</span><span class="pln">
+</span><span class="typ">Breakpoint</span><span class="pln"> hit</span><span class="pun">:</span><span class="pln"> java</span><span class="pun">.</span><span class="pln">lang</span><span class="pun">.</span><span class="typ">Object</span><span class="pun">.</span><span class="pln"> </span><span class="pun">(</span><span class="typ">Object</span><span class="pun">:</span><span class="lit">27</span><span class="pun">)</span><span class="pln">
+main</span><span class="pun">[</span><span class="lit">1</span><span class="pun">]</span><span class="pln"> list
+</span><span class="typ">Unable</span><span class="pln"> to find </span><span class="typ">Object</span><span class="pun">.</span><span class="pln">java
+main</span><span class="pun">[</span><span class="lit">1</span><span class="pun">]</span><span class="pln"> step
+main</span><span class="pun">[</span><span class="lit">1</span><span class="pun">]</span><span class="pln">
+</span><span class="typ">Breakpoint</span><span class="pln"> hit</span><span class="pun">:</span><span class="pln"> javaworld</span><span class="pun">.</span><span class="typ">TestMe</span><span class="pun">.</span><span class="pln"> </span><span class="pun">(</span><span class="typ">TestMe</span><span class="pun">:</span><span class="lit">22</span><span class="pun">)</span><span class="pln">
+main</span><span class="pun">[</span><span class="lit">1</span><span class="pun">]</span><span class="pln"> list
+</span><span class="lit">18</span><span class="pln">           </span><span class="pun">}</span><span class="pln">
+</span><span class="lit">19</span><span class="pln">
+</span><span class="lit">20</span><span class="pln">           </span><span class="kwd">public</span><span class="pln"> </span><span class="typ">TestMe</span><span class="pun">()</span><span class="pln">
+</span><span class="lit">21</span><span class="pln">           </span><span class="pun">{</span><span class="pln">
+</span><span class="lit">22</span><span class="pln">      </span><span class="pun">=&gt;</span><span class="pln">   </span><span class="pun">}</span><span class="pln">
+</span><span class="lit">23</span><span class="pln">
+</span><span class="lit">24</span><span class="pln">           </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">int</span><span class="pln"> getInt_value</span><span class="pun">()</span><span class="pln">
+</span><span class="lit">25</span><span class="pln">           </span><span class="pun">{</span><span class="pln">
+</span><span class="lit">26</span><span class="pln">  </span><span class="kwd">return</span><span class="pln"> int_value</span><span class="pun">;</span><span class="pln">
+main</span><span class="pun">[</span><span class="lit">1</span><span class="pun">]</span><span class="pln"> step
+main</span><span class="pun">[</span><span class="lit">1</span><span class="pun">]</span><span class="pln">
+</span><span class="typ">Breakpoint</span><span class="pln"> hit</span><span class="pun">:</span><span class="pln"> javaworld</span><span class="pun">.</span><span class="typ">TestMe</span><span class="pun">.</span><span class="pln">main </span><span class="pun">(</span><span class="typ">TestMe</span><span class="pun">:</span><span class="lit">10</span><span class="pun">)</span><span class="pln">
+main</span><span class="pun">[</span><span class="lit">1</span><span class="pun">]</span><span class="pln"> list
+</span><span class="lit">6</span><span class="pln">            </span><span class="kwd">private</span><span class="pln"> </span><span class="typ">String</span><span class="pln"> string_value</span><span class="pun">;</span><span class="pln">
+</span><span class="lit">7</span><span class="pln">
+</span><span class="lit">8</span><span class="pln">            </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">static</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> main</span><span class="pun">(</span><span class="typ">String</span><span class="pun">[]</span><span class="pln"> args</span><span class="pun">)</span><span class="pln">
+</span><span class="lit">9</span><span class="pln">            </span><span class="pun">{</span><span class="pln">
+</span><span class="lit">10</span><span class="pln">      </span><span class="pun">=&gt;</span><span class="pln">     </span><span class="typ">TestMe</span><span class="pln"> testMe </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">TestMe</span><span class="pun">();</span><span class="pln">
+</span><span class="lit">11</span><span class="pln">             testMe</span><span class="pun">.</span><span class="pln">setInt_value</span><span class="pun">(</span><span class="lit">1</span><span class="pun">);</span><span class="pln">
+</span><span class="lit">12</span><span class="pln">             testMe</span><span class="pun">.</span><span class="pln">setString_value</span><span class="pun">(</span><span class="str">"test"</span><span class="pun">);</span><span class="pln">
+</span><span class="lit">13</span><span class="pln">
+</span><span class="lit">14</span><span class="pln">  </span><span class="kwd">int</span><span class="pln"> integer </span><span class="pun">=</span><span class="pln"> testMe</span><span class="pun">.</span><span class="pln">getInt_value</span><span class="pun">();</span><span class="pln">
+main</span><span class="pun">[</span><span class="lit">1</span><span class="pun">]</span><span class="pln"> step
+main</span><span class="pun">[</span><span class="lit">1</span><span class="pun">]</span><span class="pln">
+</span><span class="typ">Breakpoint</span><span class="pln"> hit</span><span class="pun">:</span><span class="pln"> javaworld</span><span class="pun">.</span><span class="typ">TestMe</span><span class="pun">.</span><span class="pln">main </span><span class="pun">(</span><span class="typ">TestMe</span><span class="pun">:</span><span class="lit">11</span><span class="pun">)</span><span class="pln">
+main</span><span class="pun">[</span><span class="lit">1</span><span class="pun">]</span><span class="pln"> list
+</span><span class="lit">7</span><span class="pln">
+</span><span class="lit">8</span><span class="pln">            </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">static</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> main</span><span class="pun">(</span><span class="typ">String</span><span class="pun">[]</span><span class="pln"> args</span><span class="pun">)</span><span class="pln">
+</span><span class="lit">9</span><span class="pln">            </span><span class="pun">{</span><span class="pln">
+</span><span class="lit">10</span><span class="pln">             </span><span class="typ">TestMe</span><span class="pln"> testMe </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">TestMe</span><span class="pun">();</span><span class="pln">
+</span><span class="lit">11</span><span class="pln">      </span><span class="pun">=&gt;</span><span class="pln">     testMe</span><span class="pun">.</span><span class="pln">setInt_value</span><span class="pun">(</span><span class="lit">1</span><span class="pun">);</span><span class="pln">
+</span><span class="lit">12</span><span class="pln">             testMe</span><span class="pun">.</span><span class="pln">setString_value</span><span class="pun">(</span><span class="str">"test"</span><span class="pun">);</span><span class="pln">
+</span><span class="lit">13</span><span class="pln">
+</span><span class="lit">14</span><span class="pln">             </span><span class="kwd">int</span><span class="pln"> integer </span><span class="pun">=</span><span class="pln"> testMe</span><span class="pun">.</span><span class="pln">getInt_value</span><span class="pun">();</span><span class="pln">
+</span><span class="lit">15</span><span class="pln">  </span><span class="typ">String</span><span class="pln"> </span><span class="kwd">string</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> testMe</span><span class="pun">.</span><span class="pln">getString_value</span><span class="pun">();</span><span class="pln">
+main</span><span class="pun">[</span><span class="lit">1</span><span class="pun">]</span><span class="pln"> locals
+</span><span class="typ">Method</span><span class="pln"> arguments</span><span class="pun">:</span><span class="pln">
+</span><span class="typ">Local</span><span class="pln"> variables</span><span class="pun">:</span><span class="pln">
+  args </span><span class="pun">=</span><span class="pln">
+  testMe </span><span class="pun">=</span><span class="pln"> </span><span class="typ">String</span><span class="pln"> value</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">null</span><span class="pln"> </span><span class="kwd">int</span><span class="pln"> value</span><span class="pun">:</span><span class="pln"> </span><span class="lit">0</span></pre><div class="apart ad lazyload_ad_article"><code type="text/javascript"><!--IDG.GPT.IMUCounter = IDG.GPT.IMUCounter + 1;IDG.GPT.addDisplayedAd(IDG.GPT.getIMUSlotName(), "true");IDG.GPT.addLazyloadedAd(IDG.GPT.getIMUSlotName(), "true");document.write('<div id="' + IDG.GPT.getIMUSlotName() + '" class="">');googletag.cmd.push(function() { var thisSlot = googletag.defineSlot(IDG.GPT.unitName, [[320,50],[300,1050],[300,600],[300,250],[300,50]], IDG.GPT.getIMUSlotName()).addService(googletag.pubads()).setTargeting("pos", IDG.GPT.getIMUSlotName());googletag.enableServices();googletag.display(IDG.GPT.getIMUSlotName());googletag.pubads().refresh([thisSlot]);});document.write('</div>');//--></code><div class="wrapAd"><div id="imu3" class=""><div id="google_ads_iframe_/8456/IDG.Javaworld_Enterprise_7__container__" style="border: 0pt none;"><iframe id="google_ads_iframe_/8456/IDG.Javaworld_Enterprise_7" name="google_ads_iframe_/8456/IDG.Javaworld_Enterprise_7" width="300" height="250" scrolling="no" marginwidth="0" marginheight="0" frameborder="0" src="javascript:"<html><body style='background:transparent'></body></html>"" style="border: 0px; vertical-align: bottom;"></iframe></div><iframe id="google_ads_iframe_/8456/IDG.Javaworld_Enterprise_7__hidden__" name="google_ads_iframe_/8456/IDG.Javaworld_Enterprise_7__hidden__" width="0" height="0" scrolling="no" marginwidth="0" marginheight="0" frameborder="0" src="javascript:"<html><body style='background:transparent'></body></html>"" style="border: 0px; vertical-align: bottom; visibility: hidden; display: none;"></iframe></div></div></div><p>After each <code>step</code>, I called the <code>list</code> command to see where I was in the code. The return value from the command listed the line number, but somehow that didn't really help me very much.</p><p>As we <code>step</code>, we see that the main method is constructing a <code>TestMe</code> instance. Each step takes us through the constructor and finally back into the main method. The <code>locals</code> command lists all of the local variables visible in the current stack. We see that at this point in the main method there are only two local variables: <code>args</code> and <code>testMe</code>.</p><p>By using <code>step</code>, we can get inside any of the methods to see what is going on. When we combine <code>step</code> with the <code>locals</code> command we can see our variables:</p><pre class="prettyprint prettyprinted" style=""><span class="pln">main</span><span class="pun">[</span><span class="lit">1</span><span class="pun">]</span><span class="pln"> step
+main</span><span class="pun">[</span><span class="lit">1</span><span class="pun">]</span><span class="pln">
+</span><span class="typ">Breakpoint</span><span class="pln"> hit</span><span class="pun">:</span><span class="pln"> javaworld</span><span class="pun">.</span><span class="typ">TestMe</span><span class="pun">.</span><span class="pln">setInt_value </span><span class="pun">(</span><span class="typ">TestMe</span><span class="pun">:</span><span class="lit">36</span><span class="pun">)</span><span class="pln">
+main</span><span class="pun">[</span><span class="lit">1</span><span class="pun">]</span><span class="pln"> list
+</span><span class="lit">32</span><span class="pln">           </span><span class="pun">}</span><span class="pln">
+</span><span class="lit">33</span><span class="pln">
+</span><span class="lit">34</span><span class="pln">           </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> setInt_value</span><span class="pun">(</span><span class="kwd">int</span><span class="pln"> value</span><span class="pun">)</span><span class="pln">
+</span><span class="lit">35</span><span class="pln">           </span><span class="pun">{</span><span class="pln">
+</span><span class="lit">36</span><span class="pln">      </span><span class="pun">=&gt;</span><span class="pln">     int_value </span><span class="pun">=</span><span class="pln"> value</span><span class="pun">;</span><span class="pln">
+</span><span class="lit">37</span><span class="pln">           </span><span class="pun">}</span><span class="pln">
+</span><span class="lit">38</span><span class="pln">
+</span><span class="lit">39</span><span class="pln">           </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> setString_value</span><span class="pun">(</span><span class="typ">String</span><span class="pln"> value</span><span class="pun">)</span><span class="pln">
+</span><span class="lit">40</span><span class="pln">           </span><span class="pun">{</span><span class="pln">
+main</span><span class="pun">[</span><span class="lit">1</span><span class="pun">]</span><span class="pln"> locals
+</span><span class="typ">Method</span><span class="pln"> arguments</span><span class="pun">:</span><span class="pln">
+</span><span class="typ">Local</span><span class="pln"> variables</span><span class="pun">:</span><span class="pln">
+  value </span><span class="pun">=</span><span class="pln"> </span><span class="lit">1</span><span class="pln">
+  </span><span class="kwd">this</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="typ">String</span><span class="pln"> value</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">null</span><span class="pln"> </span><span class="kwd">int</span><span class="pln"> value</span><span class="pun">:</span><span class="pln"> </span><span class="lit">0</span></pre><div id="drr-mod-2">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+		
+	
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="promo apart most-popular" data-placement-id="drr-mod-2">
+    <div class="hed">Popular On JavaWorld</div>
+   
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<ul>
+		
+			
+			
+				
+					
+						
+						
+						
+						
+						
+						
+						
+						
+					
+
+
+
+
+
+
+
+
+
+
+
+
+<li>
+	
+	<div class="item-eyebrow">
+		
+			
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+		
+			
+				
+			
+			
+				
+				
+					<a href="http://www.javaworld.com/opinion">OPINION</a>
+				
+			
+		
+		
+    	
+	
+
+	</div>	
+	<div class="title"><a href="http://www.javaworld.com/article/2081850/enterprise-java/10-things-you-dont-need-to-worry-about-in-2014.html">10 things you don't need to worry about in 2014</a></div>
+</li>
+				
+				
+			
+		
+			
+			
+				
+					
+						
+						
+						
+						
+						
+						
+						
+						
+					
+
+
+
+
+
+
+
+
+
+
+
+
+<li>
+	
+	<div class="item-eyebrow">
+		
+			
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+		
+			
+				
+			
+			
+				
+				
+					<a href="http://www.javaworld.com/news">NEWS</a>
+				
+			
+		
+		
+    	
+	
+
+	</div>	
+	<div class="title"><a href="http://www.javaworld.com/article/2078836/java-se/love-and-hate-for-java-8.html">Love and hate for Java 8</a></div>
+</li>
+				
+				
+			
+		
+			
+			
+				
+					
+						
+						
+						
+						
+						
+						
+						
+						
+					
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="with-image">
+	
+	<div class="item-eyebrow">
+					<a href="http://www.javaworld.com/feature">FEATURE</a>
+	</div>	
+	<div class="title"><a href="http://www.javaworld.com/article/2079190/scripting-jvm-languages/6-things-you-should-know-about-node-js.html">6 things you should know about Node.js</a></div>
+</li>
+				
+
+<li class="with-image">
+	
+	<div class="item-eyebrow">
+		
+			
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+		
+			
+				
+			
+			
+				
+				
+					<a href="http://www.javaworld.com/news">NEWS</a>
+				
+			
+		
+		
+    	
+	
+
+	</div>	
+	<div class="title"><a href="http://www.javaworld.com/article/2080841/java-app-dev/spring-java-framework-springs-forward-despite-oracle-challenge.html">Spring Java framework springs forward despite Oracle challenge</a></div>
+</li>
+				
+				
+			
+		
+	</ul>
+
+	
+		
+				
+				
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+</div>
+<div class="handle"></div>
+
+
+</div><p>If we <code>step</code> one more time, we end up in the <code>setInt_value()</code> method. If we <code>step</code> two more times, the method will set the <code>int_value</code> member to <code>1</code> and return. (To check to see that the method set the value, use the <code>locals</code> command.)</p><p>Of course, when we <code>step</code>, we won't always want to trace into each method we encounter. Some method calls can nest very deeply. If we were forced to trace through an entire hierarchy, we might never finish. Luckily, <code>jdb</code> has a way to execute a method <em>without</em> tracing into that method: the <code>next</code> command.</p><p><code>jdb</code> also provides a few other <code>step</code> commands. The <code>stepi</code> command executes the current instruction. In other words, the code at the <code>=&gt;</code> will execute but the current line will not advance to the next instruction. You can call <code>stepi</code> a million times, but the <code>=&gt;</code> displayed from the <code>list</code> command will not move.</p><p><code>jdb</code> also provides the <code>step up</code> command. The <code>step up</code> call executes until the current method returns to its caller. Simply put, this stepper executes a method and nothing else. Take the following code segment as an example:</p><pre class="prettyprint prettyprinted" style=""><span class="kwd">int</span><span class="pln"> integer </span><span class="pun">=</span><span class="pln"> testMe</span><span class="pun">.</span><span class="pln">getInt_value</span><span class="pun">();</span></pre><p>If this is our current line and we run <code>step up</code>, the <code>getInt_value()</code> method will execute. However, that's all that will happen. The return value will not get set to <code>integer</code>.</p><div class="apart ad lazyload_ad_article"><code type="text/javascript"><!--IDG.GPT.IMUCounter = IDG.GPT.IMUCounter + 1;IDG.GPT.addDisplayedAd(IDG.GPT.getIMUSlotName(), "true");IDG.GPT.addLazyloadedAd(IDG.GPT.getIMUSlotName(), "true");document.write('<div id="' + IDG.GPT.getIMUSlotName() + '" class="">');googletag.cmd.push(function() { var thisSlot = googletag.defineSlot(IDG.GPT.unitName, [[320,50],[300,1050],[300,600],[300,250],[300,50]], IDG.GPT.getIMUSlotName()).addService(googletag.pubads()).setTargeting("pos", IDG.GPT.getIMUSlotName());googletag.enableServices();googletag.display(IDG.GPT.getIMUSlotName());googletag.pubads().refresh([thisSlot]);});document.write('</div>');//--></code><div class="wrapAd"><div id="imu4" class=""><div id="google_ads_iframe_/8456/IDG.Javaworld_Enterprise_8__container__" style="border: 0pt none;"><iframe id="google_ads_iframe_/8456/IDG.Javaworld_Enterprise_8" name="google_ads_iframe_/8456/IDG.Javaworld_Enterprise_8" width="300" height="250" scrolling="no" marginwidth="0" marginheight="0" frameborder="0" src="javascript:"<html><body style='background:transparent'></body></html>"" style="border: 0px; vertical-align: bottom;"></iframe></div><iframe id="google_ads_iframe_/8456/IDG.Javaworld_Enterprise_8__hidden__" name="google_ads_iframe_/8456/IDG.Javaworld_Enterprise_8__hidden__" width="0" height="0" scrolling="no" marginwidth="0" marginheight="0" frameborder="0" src="javascript:"<html><body style='background:transparent'></body></html>"" style="border: 0px; vertical-align: bottom; visibility: hidden; display: none;"></iframe></div></div></div><p><code>jdb</code> also allows us to set multiple breakpoints. To go from one breakpoint directly to the next, <code>jdb</code> provides the <code>cont</code> command.</p><p>Finally, there are times when we want to look at all the members of an instance or class. Luckily, <code>jdb</code> provides the <code>dump</code> and <code>print</code> commands:</p><pre class="prettyprint prettyprinted" style=""><span class="pln">main</span><span class="pun">[</span><span class="lit">1</span><span class="pun">]</span><span class="pln"> </span><span class="kwd">dump</span><span class="pln"> </span><span class="typ">TestMe</span><span class="pln">
+</span><span class="typ">TestMe</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="lit">0xa9</span><span class="pun">:</span><span class="kwd">class</span><span class="pun">(</span><span class="pln">javaworld</span><span class="pun">.</span><span class="typ">TestMe</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    superclass </span><span class="pun">=</span><span class="pln"> </span><span class="lit">0x2</span><span class="pun">:</span><span class="kwd">class</span><span class="pun">(</span><span class="pln">java</span><span class="pun">.</span><span class="pln">lang</span><span class="pun">.</span><span class="typ">Object</span><span class="pun">)</span><span class="pln">
+    loader </span><span class="pun">=</span><span class="pln"> </span><span class="pun">(</span><span class="pln">sun</span><span class="pun">.</span><span class="pln">misc</span><span class="pun">.</span><span class="typ">Launcher$AppClassLoader</span><span class="pun">)</span><span class="lit">0xaa</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+main</span><span class="pun">[</span><span class="lit">1</span><span class="pun">]</span><span class="pln"> </span><span class="kwd">print</span><span class="pln"> </span><span class="typ">TestMe</span><span class="pln">
+</span><span class="typ">TestMe</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="lit">0xa9</span><span class="pun">:</span><span class="kwd">class</span><span class="pun">(</span><span class="pln">javaworld</span><span class="pun">.</span><span class="typ">TestMe</span><span class="pun">)</span><span class="pln">
+main</span><span class="pun">[</span><span class="lit">1</span><span class="pun">]</span><span class="pln"> </span><span class="kwd">dump</span><span class="pln"> testMe
+testMe </span><span class="pun">=</span><span class="pln"> </span><span class="pun">(</span><span class="pln">javaworld</span><span class="pun">.</span><span class="typ">TestMe</span><span class="pun">)</span><span class="lit">0xec</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">private</span><span class="pln"> java</span><span class="pun">.</span><span class="pln">lang</span><span class="pun">.</span><span class="typ">String</span><span class="pln"> string_value </span><span class="pun">=</span><span class="pln"> test
+    </span><span class="kwd">private</span><span class="pln"> </span><span class="kwd">int</span><span class="pln"> int_value </span><span class="pun">=</span><span class="pln"> </span><span class="lit">1</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+main</span><span class="pun">[</span><span class="lit">1</span><span class="pun">]</span><span class="pln"> </span><span class="kwd">print</span><span class="pln"> testMe
+testMe </span><span class="pun">=</span><span class="pln"> </span><span class="typ">String</span><span class="pln"> value</span><span class="pun">:</span><span class="pln"> test </span><span class="kwd">int</span><span class="pln"> value</span><span class="pun">:</span><span class="pln"> </span><span class="lit">1</span></pre><div id="drr-left">
+
+
+
+<p>When you run <code>dump</code> or <code>print</code> on a class, you get class information, which includes superclass and loader information. When you run <code>dump</code> and <code>print</code> on an instance, you get instance information, such as data members and their current values.</p><p><code>jdb</code> also provides commands for getting down and dirty in the threads and stacks. However, these commands are really beyond the scope of a <code>jdb</code> intro.</p><p>One final point: you may ask, "How do you effectively use <code>jdb</code>?" The effectiveness of use will depend on your comfort level with <code>jdb</code>. When you first use <code>jdb</code>, the most important command is <code>help</code>. The <code>help</code> command lists each command and provides some basic information to help you get started. Once you have the <code>help</code> command mastered, you'll find yourself using the commands that set breakpoints, along with <code>step</code> and <code>list</code>. Any combination of those commands will allow you to get started using <code>jdb</code>. <code>step</code>, <code>list</code>, <code>step</code>, <code>list</code>... should help you quickly locate code that is bombing out on you.</p>
+	
+</div>	
+				
+				</section><!-- /.bodee -->
+
+				
+
+
+
+				</article>
+
+			</section><!-- /role=main -->
+
+		</div><!-- /#page-wrapper -->
+
+		
+
+
+
+
+
+
+</body></html>
